@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Amalfi Sept 2025">
+<title>Amalfi Coast · Sept 2025</title>
+<style>
+  :root {
+    --sea:    #0A7EA4;
+    --sea-dk: #065F7A;
+    --sea-lt: #E8F5FA;
+    --gold:   #C9830A;
+    --gold-lt:#FDF3E3;
+    --stone:  #F7F5F2;
+    --text:   #1A1A1A;
+    --muted:  #6B6560;
+    --border: #E2DDD8;
+    --white:  #FFFFFF;
+    --green:  #1A7A4A;
+    --green-lt:#E8F5EE;
+    --radius: 14px;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    background: var(--stone);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: calc(1.5rem + var(--safe-bottom));
+  }
+
+  /* ── HERO ─────────────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(160deg, #065F7A 0%, #0A7EA4 55%, #1A9BBF 100%);
+    padding: calc(1.25rem + var(--safe-top)) 1.25rem 1.5rem;
+    color: white;
+  }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 0.35rem;
+  }
+  .hero-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.5px;
+  }
+  .hero-sub {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 1.25rem;
+    line-height: 1.4;
+  }
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .pill {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* ── LEGEND ───────────────────────────────────────────── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 1rem 1.25rem 0.25rem;
+  }
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .leg-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── SECTION LABEL ────────────────────────────────────── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 1.25rem 1.25rem 0.5rem;
+  }
+
+  /* ── DAY CARD ─────────────────────────────────────────── */
+  .day-card {
+    margin: 0 1rem 0.75rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.06);
+  }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    background: var(--white);
+    transition: background 0.15s;
+    min-height: 56px;
+  }
+  .day-header:active { background: var(--stone); }
+
+  .day-badge {
+    background: var(--sea);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+
+  .day-header-text { flex: 1; min-width: 0; }
+  .day-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .day-tagline {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .chevron {
+    color: var(--muted);
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+    margin-left: 4px;
+  }
+  .chevron.open { transform: rotate(180deg); }
+
+  /* ── DAY BODY ─────────────────────────────────────────── */
+  .day-body {
+    display: none;
+    border-top: 1px solid var(--border);
+  }
+  .day-body.open { display: block; }
+
+  /* ── EVENT ────────────────────────────────────────────── */
+  .event {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .event:last-child { border-bottom: none; }
+
+  .event-time {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    min-width: 58px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .event-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .event-body { flex: 1; min-width: 0; }
+
+  .event-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+
+  .event-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .event-tip {
+    display: inline-block;
+    margin-top: 7px;
+    background: var(--green-lt);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 9px;
+    border-radius: 7px;
+    line-height: 1.4;
+  }
+
+  .event-book {
+    display: inline-block;
+    margin-top: 7px;
+    background: var(--gold-lt);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 9px;
+    border-radius: 7px;
+    line-height: 1.4;
+  }
+
+  /* ── DOT COLOURS ──────────────────────────────────────── */
+  .d-food   { background: #E06B8A; }
+  .d-boat   { background: #378ADD; }
+  .d-sight  { background: #EF9F27; }
+  .d-hotel  { background: #1D9E75; }
+  .d-shop   { background: #7F77DD; }
+  .d-wine   { background: #D85A30; }
+  .d-beach  { background: #1A9BBF; }
+
+  /* ── PRACTICAL NOTES ──────────────────────────────────── */
+  .notes-card {
+    margin: 0 1rem 0.75rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.06);
+  }
+  .notes-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    min-height: 56px;
+  }
+  .notes-header:active { background: var(--stone); }
+  .notes-badge {
+    background: var(--gold);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+  .notes-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 0 16px;
+  }
+  .notes-body.open { display: block; }
+  .note-row {
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .note-row:last-child { border-bottom: none; }
+  .note-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sea-dk);
+    min-width: 78px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .note-text {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  /* ── KEY CONTACTS ─────────────────────────────────────── */
+  .contacts-card {
+    margin: 0 1rem 0.75rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 0.5px rgba(0,0,0,0.06);
+  }
+  .contacts-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    padding: 14px 16px 10px;
+    letter-spacing: -0.1px;
+  }
+  .contact-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    gap: 8px;
+  }
+  .contact-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .contact-role { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .contact-link {
+    font-size: 12px;
+    color: var(--sea);
+    font-weight: 500;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER ───────────────────────────────────────────── */
+  .footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 1rem 1.25rem 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-label">September 2025</p>
+  <h1 class="hero-title">Amalfi Coast</h1>
+  <p class="hero-sub">Anantara Convento di Amalfi Grand Hotel<br>Junior suite · private terrace · jacuzzi</p>
+  <div class="hero-pills">
+    <span class="pill">4 nights</span>
+    <span class="pill">James &amp; Kristin</span>
+    <span class="pill">Arrive Fri 5 Sep</span>
+    <span class="pill">Depart Tue 9 Sep</span>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="leg"><div class="leg-dot d-food"></div>Dining</div>
+  <div class="leg"><div class="leg-dot d-boat"></div>Boat</div>
+  <div class="leg"><div class="leg-dot d-sight"></div>Sightseeing</div>
+  <div class="leg"><div class="leg-dot d-beach"></div>Beach</div>
+  <div class="leg"><div class="leg-dot d-shop"></div>Shopping</div>
+  <div class="leg"><div class="leg-dot d-wine"></div>Drinks</div>
+  <div class="leg"><div class="leg-dot d-hotel"></div>Hotel</div>
+</div>
+
+<p class="section-label">Itinerary</p>
+
+<!-- DAY 1 -->
+<div class="day-card">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-badge">Sat 6</span>
+    <div class="day-header-text">
+      <div class="day-title">Arrival — settle in &amp; Amalfi town</div>
+      <div class="day-tagline">Easy arrival day</div>
+    </div>
+    <span class="chevron open">▼</span>
+  </div>
+  <div class="day-body open">
+    <div class="event">
+      <span class="event-time">Afternoon</span>
+      <div class="event-dot d-hotel"></div>
+      <div class="event-body">
+        <div class="event-name">Check in &amp; terrace time</div>
+        <div class="event-desc">Settle in and open the first bottle of chilled Falanghina on your private terrace. The view down to the port is the best possible start.</div>
+        <span class="event-tip">Ask hotel to pre-stock minibar with prosecco &amp; Amalfi lemon granita</span>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">5:00 pm</span>
+      <div class="event-dot d-sight"></div>
+      <div class="event-body">
+        <div class="event-name">Stroll through Amalfi town</div>
+        <div class="event-desc">Take the hotel shuttle down. Wander Piazza del Duomo, step inside the Cathedral of Sant'Andrea and its stunning 9th-century bronze doors, and explore the Chiostro del Paradiso cloister.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">6:30 pm</span>
+      <div class="event-dot d-wine"></div>
+      <div class="event-body">
+        <div class="event-name">Aperitivo — hotel cliffside bar</div>
+        <div class="event-desc">The hotel's cliffside bar at sunset is one of the most spectacular views on the coast. Order a Limoncello Spritz and let the evening arrive slowly.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">8:00 pm</span>
+      <div class="event-dot d-food"></div>
+      <div class="event-body">
+        <div class="event-name">Dinner — La Locanda by Gino Sorbillo</div>
+        <div class="event-desc">The hotel's pizza and Mediterranean restaurant. Authentic Neapolitan pizza from one of Naples' most celebrated pizza makers, with that coastal backdrop. No need to go anywhere.</div>
+        <span class="event-book">📋 Book a terrace table at check-in</span>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">Late</span>
+      <div class="event-dot d-hotel"></div>
+      <div class="event-body">
+        <div class="event-name">Jacuzzi under the stars</div>
+        <div class="event-desc">The terrace jacuzzi with the lights of Amalfi below and the Tyrrhenian Sea beyond. Pour something cold and don't rush to bed.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY 2 -->
+<div class="day-card">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-badge">Sun 7</span>
+    <div class="day-header-text">
+      <div class="day-title">Private boat to Positano — beaches &amp; shopping</div>
+      <div class="day-tagline">The big boat day</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body">
+    <div class="event">
+      <span class="event-time">7:30 am</span>
+      <div class="event-dot d-hotel"></div>
+      <div class="event-body">
+        <div class="event-name">Breakfast on the panoramic terrace</div>
+        <div class="event-desc">The lavish hotel buffet terrace — one of the best breakfasts on the coast. Go early for a quiet table and the best light.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">9:30 am</span>
+      <div class="event-dot d-boat"></div>
+      <div class="event-body">
+        <div class="event-name">Private boat departs — Amalfi port</div>
+        <div class="event-desc">Private gozzo or motorboat west along the coast to Positano with swimming stops in hidden coves en route. Prosecco and snacks included on most private charters.</div>
+        <span class="event-book">📋 Book ahead: KissFromItaly, Lucibello or Positano By Boat. ~€400–600 for a full day private charter. Summer books out weeks ahead.</span>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">12:00 pm</span>
+      <div class="event-dot d-beach"></div>
+      <div class="event-body">
+        <div class="event-name">Fornillo beach, Positano</div>
+        <div class="event-desc">Ask the skipper to drop you at Fornillo — quieter than Spiaggia Grande, with excellent small restaurants and a genuinely relaxed atmosphere. Hire sunbeds from one of the beach clubs.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">1:30 pm</span>
+      <div class="event-dot d-food"></div>
+      <div class="event-body">
+        <div class="event-name">Lunch — Da Vincenzo or Saraceno d'Oro</div>
+        <div class="event-desc">Both are family-run, highly rated, and far better value than tourist-facing spots near Spiaggia Grande. Fresh seafood pasta, grilled octopus, cold white wine.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">3:00 pm</span>
+      <div class="event-dot d-shop"></div>
+      <div class="event-body">
+        <div class="event-name">Shopping — Via dei Mulini &amp; backstreets</div>
+        <div class="event-desc">Custom handmade leather sandals made to measure at Safari Sandals or Artigianato Rallo. Linen at La Bottega di Brunella. Ceramics and jewellery tucked into stairway boutiques.</div>
+        <span class="event-tip">Wander the side steps for best artisan quality — avoid the main road tourist shops</span>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">5:00 pm</span>
+      <div class="event-dot d-wine"></div>
+      <div class="event-body">
+        <div class="event-name">Sunset aperitivo — Li Galli Bistro</div>
+        <div class="event-desc">Extraordinary views of the coast for a pre-departure Aperol Spritz. Watch the light change over the Faraglioni rocks.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">6:30 pm</span>
+      <div class="event-dot d-boat"></div>
+      <div class="event-body">
+        <div class="event-name">Boat back to Amalfi at dusk</div>
+        <div class="event-desc">Watch the cliffside villages light up on the return. Ask your skipper to take it slowly.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">8:30 pm</span>
+      <div class="event-dot d-food"></div>
+      <div class="event-body">
+        <div class="event-name">Dinner — Ristorante Marina Grande</div>
+        <div class="event-desc">Right on the Amalfi waterfront. Lobster pasta, seafood risotto, excellent local wine. Consistently top-rated for food, location, and romance.</div>
+        <span class="event-book">📋 Book ahead — request a terrace sea-view table</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY 3 -->
+<div class="day-card">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-badge">Mon 8</span>
+    <div class="day-header-text">
+      <div class="day-title">Ravello &amp; Michelin star dinner</div>
+      <div class="day-tagline">The most romantic day</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body">
+    <div class="event">
+      <span class="event-time">9:00 am</span>
+      <div class="event-dot d-hotel"></div>
+      <div class="event-body">
+        <div class="event-name">Lazy morning — room service breakfast</div>
+        <div class="event-desc">Breakfast on your private terrace, or the hotel buffet. A late, relaxed start.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">11:00 am</span>
+      <div class="event-dot d-sight"></div>
+      <div class="event-body">
+        <div class="event-name">Taxi to Ravello</div>
+        <div class="event-desc">Just 4 miles but a world apart. Take a taxi (~€20–30) rather than the twisty bus. Arrive before the day-tripper coaches for the villas almost to yourselves.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">11:30 am</span>
+      <div class="event-dot d-sight"></div>
+      <div class="event-body">
+        <div class="event-name">Villa Cimbrone — Terrace of Infinity</div>
+        <div class="event-desc">One of the most beautiful places in Italy. Walk through 11th-century gardens — roses, hydrangeas, marble temples — to the Terrazza dell'Infinito, 365m above the Mediterranean. Gore Vidal called the view from here the most beautiful in the world. He wasn't wrong.</div>
+        <span class="event-tip">Go straight to the terrace when it opens, then explore the gardens on the way back</span>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">1:00 pm</span>
+      <div class="event-dot d-food"></div>
+      <div class="event-body">
+        <div class="event-name">Lunch — Cumpa' Cosimo, Ravello</div>
+        <div class="event-desc">A beloved family-run trattoria on Via Roma. Handmade pasta, roasted meats, warm welcome. The antidote to hotel fine dining at lunchtime — excellent value.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">2:30 pm</span>
+      <div class="event-dot d-sight"></div>
+      <div class="event-body">
+        <div class="event-name">Villa Rufolo &amp; Piazza Duomo</div>
+        <div class="event-desc">The 13th-century villa's Moorish cloister, terraced gardens and coastal panorama. Then wander Ravello's quiet streets, browse ceramics shops, and sit in the square with a coffee.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">5:00 pm</span>
+      <div class="event-dot d-hotel"></div>
+      <div class="event-body">
+        <div class="event-name">Return to hotel — Anantara Spa</div>
+        <div class="event-desc">Book a couples treatment in advance. Then the terrace jacuzzi for pre-dinner drinks.</div>
+        <span class="event-book">📋 Book spa treatment at check-in — gets busy quickly</span>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">7:30 pm</span>
+      <div class="event-dot d-food"></div>
+      <div class="event-body">
+        <div class="event-name">★ Dinner — Rossellinis, Palazzo Avino</div>
+        <div class="event-desc">The finest dinner on the Amalfi Coast. Michelin-starred. Champagne in the garden terrace at dusk, then dinner inside — Chef Giovanni Vanacore's light regional cooking, an extraordinary wine list, views down to the coast. Tasting menus named poetically ("La Mia Storia con Ravello"). Allow 3–4 hours. Budget ~€400–500 for two with wine.</div>
+        <span class="event-book">📋 Book direct: info@palazzoavino.com · +39 089 818181. Ask for garden terrace welcome &amp; Sommelier's Table if available.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY 4 -->
+<div class="day-card">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-badge">Tue 9</span>
+    <div class="day-header-text">
+      <div class="day-title">Capri by private boat</div>
+      <div class="day-tagline">Full day at sea</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body">
+    <div class="event">
+      <span class="event-time">8:30 am</span>
+      <div class="event-dot d-boat"></div>
+      <div class="event-body">
+        <div class="event-name">Private boat to Capri — Amalfi port</div>
+        <div class="event-desc">Fully private ~8 hour charter. The crossing passes Li Galli Islands (where the Sirens of Greek myth supposedly lived) with swimming stops before reaching Capri.</div>
+        <span class="event-book">📋 Book: KissFromItaly (kissfromitaly.com) — private charter direct from Amalfi port</span>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">11:00 am</span>
+      <div class="event-dot d-sight"></div>
+      <div class="event-body">
+        <div class="event-name">Blue Grotto &amp; Faraglioni rocks</div>
+        <div class="event-desc">The Blue Grotto — neon blue light through a submerged limestone cave (~€15 extra per person by rowboat, worth it). Then the Faraglioni sea stacks and Marina Piccola bay for swimming in extraordinary water.</div>
+        <span class="event-tip">Only accessible when seas are calm — your skipper will know on the day</span>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">1:00 pm</span>
+      <div class="event-dot d-food"></div>
+      <div class="event-body">
+        <div class="event-name">Lunch — Nerano village or Capri town</div>
+        <div class="event-desc">Nerano bay is famous for Spaghetti alla Nerano — the courgette and provola pasta dish invented here. Or take the funicular up to Capri town for something more glamorous.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">3:00 pm</span>
+      <div class="event-dot d-shop"></div>
+      <div class="event-body">
+        <div class="event-name">Capri town — the Piazzetta</div>
+        <div class="event-desc">One of the world's great people-watching spots. Carthusia perfumers (the iconic local fragrance house), ceramics, limoncello, high fashion. Coffee at a Piazzetta table watching the world go by.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">5:00 pm</span>
+      <div class="event-dot d-boat"></div>
+      <div class="event-body">
+        <div class="event-name">Sunset cruise back to Amalfi</div>
+        <div class="event-desc">Ask your skipper to time the return for the golden hour. A final swim off the cliffs of Praiano or Furore. Most private charters open prosecco for the return leg.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">8:00 pm</span>
+      <div class="event-dot d-food"></div>
+      <div class="event-body">
+        <div class="event-name">Dinner — Dei Cappuccini, Anantara hotel</div>
+        <div class="event-desc">After a long day at sea, eat at the hotel's fine dining restaurant. Chef Claudio Lanuto's contemporary Amalfi Coast menu in a 13th-century Capuchin monastery dining room. Unforgettable setting.</div>
+        <span class="event-book">📋 Book at check-in — after Capri you won't want to go far</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY 5 -->
+<div class="day-card">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-badge">Wed 10</span>
+    <div class="day-header-text">
+      <div class="day-title">Slow morning &amp; departure</div>
+      <div class="day-tagline">Gentle final day</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="day-body">
+    <div class="event">
+      <span class="event-time">Morning</span>
+      <div class="event-dot d-hotel"></div>
+      <div class="event-body">
+        <div class="event-name">Final breakfast &amp; infinity pool</div>
+        <div class="event-desc">The Anantara's infinity pool is cut directly into the clifftop rock — one of the most dramatic on the Amalfi Coast. Spend the morning here before checkout.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">11:00 am</span>
+      <div class="event-dot d-beach"></div>
+      <div class="event-body">
+        <div class="event-name">Lido degli Artisti beach club</div>
+        <div class="event-desc">The hotel offers access just 5 minutes away by boat. Arrange the night before. One last few hours of Tyrrhenian sun.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">1:00 pm</span>
+      <div class="event-dot d-food"></div>
+      <div class="event-body">
+        <div class="event-name">Final lunch — Il Tari or Da Gemma</div>
+        <div class="event-desc">Both are long-established Amalfi classics on or near the main piazza. One last plate of seafood pasta and a cold glass of local white.</div>
+      </div>
+    </div>
+    <div class="event">
+      <span class="event-time">3:00 pm</span>
+      <div class="event-dot d-sight"></div>
+      <div class="event-body">
+        <div class="event-name">Final wander &amp; limoncello shopping</div>
+        <div class="event-desc">Amalfi's Sfusato lemons are unique to this coast. Pick up artisan limoncello from Andrea Pansa pasticceria. The Museo della Carta (paper museum) is a hidden 15-minute gem if time allows.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRACTICAL NOTES -->
+<p class="section-label">Notes &amp; tips</p>
+
+<div class="notes-card">
+  <div class="notes-header" onclick="toggleNotes(this)">
+    <span class="notes-badge">Info</span>
+    <div class="day-header-text">
+      <div class="day-title">Practical notes</div>
+      <div class="day-tagline">Bookings, budget, tips</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="notes-body">
+    <div class="note-row">
+      <span class="note-label">Rossellinis</span>
+      <span class="note-text">Book immediately: info@palazzoavino.com or +39 089 818181. Ask for the garden terrace welcome and enquire about the Sommelier's Table (private cave, 2 guests).</span>
+    </div>
+    <div class="note-row">
+      <span class="note-label">Boat charters</span>
+      <span class="note-text">Book both private boat days as soon as possible — September charters sell out. KissFromItaly for Capri; Lucibello or Positano By Boat for the Positano day.</span>
+    </div>
+    <div class="note-row">
+      <span class="note-label">Hotel shuttle</span>
+      <span class="note-text">Free shuttle to Amalfi town every 30 mins. For Ravello, taxi is ~€20–30 — far easier than the bus.</span>
+    </div>
+    <div class="note-row">
+      <span class="note-label">Wine to order</span>
+      <span class="note-text">Ask for Falanghina, Fiano di Avellino, or Greco di Tufo (local white wines). For red: Aglianico del Taurasi. All Campanian and exceptional.</span>
+    </div>
+    <div class="note-row">
+      <span class="note-label">Blue Grotto</span>
+      <span class="note-text">Only accessible in calm seas. Your skipper decides on the day — don't bank on it but it's worth trying.</span>
+    </div>
+    <div class="note-row">
+      <span class="note-label">Dress code</span>
+      <span class="note-text">Amalfi is smart-casual throughout. Rossellinis: smart-casual minimum, jacket recommended. Capri Piazzetta: linen and slightly elevated fits the scene.</span>
+    </div>
+    <div class="note-row">
+      <span class="note-label">Budget guide</span>
+      <span class="note-text">Private boat (per day): €400–600. Rossellinis dinner for two: ~€400–500 with wine. Beach clubs: €20–30/person. Capri funicular: €2.50 each way. Villa Cimbrone entry: €7/person.</span>
+    </div>
+  </div>
+</div>
+
+<!-- KEY CONTACTS -->
+<div class="contacts-card">
+  <div class="contacts-title">Key contacts</div>
+  <div class="contact-row">
+    <div>
+      <div class="contact-name">Anantara Convento di Amalfi</div>
+      <div class="contact-role">Your hotel</div>
+    </div>
+    <a class="contact-link" href="tel:+39089873686">Call</a>
+  </div>
+  <div class="contact-row">
+    <div>
+      <div class="contact-name">Rossellinis / Palazzo Avino</div>
+      <div class="contact-role">Michelin dinner reservation</div>
+    </div>
+    <a class="contact-link" href="tel:+39089818181">Call</a>
+  </div>
+  <div class="contact-row">
+    <div>
+      <div class="contact-name">KissFromItaly</div>
+      <div class="contact-role">Capri private boat</div>
+    </div>
+    <a class="contact-link" href="https://www.kissfromitaly.com" target="_blank">Website</a>
+  </div>
+  <div class="contact-row">
+    <div>
+      <div class="contact-name">Lucibello Positano</div>
+      <div class="contact-role">Positano day boat</div>
+    </div>
+    <a class="contact-link" href="https://www.lucibello.it" target="_blank">Website</a>
+  </div>
+</div>
+
+<p class="footer">Amalfi Coast · September 2025 · James &amp; Kristin</p>
+
+<script>
+  function toggle(header) {
+    var body = header.nextElementSibling;
+    var chevron = header.querySelector('.chevron');
+    var isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  function toggleNotes(header) {
+    var body = header.nextElementSibling;
+    var chevron = header.querySelector('.chevron');
+    var isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+  }
+</script>
+</body>
+</html>
